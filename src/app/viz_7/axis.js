@@ -55,11 +55,11 @@ export function appendGraphLabels (svg,width,height) {
       .text('Mesures d\'adaptation')
       .attr('class', 'y axis-text')
       .attr('font-size', 12)
-      .attr('transform','translate(-68,0)')
+      .attr('transform','translate(-68,10)')
       .attr('text-anchor','middle')
   
     svg.append('text')
-      .text('Proximité physique')
+      .text('Pourcentage d\'adoption')
       .attr('class', 'x axis-text')
       .attr('font-size', 12)
       .attr('transform','translate('+(width/2)+' '+(height+40)+')')

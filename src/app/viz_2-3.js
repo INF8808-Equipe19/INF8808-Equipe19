@@ -41,24 +41,20 @@ export async function initialize() {
   const yScale = setYScale(config.height)
   const rScale = setRScale(professions)
 
-  /*return colors.map(d => {
-    return direction => {
-      console.log(direction); // Log the current scroll direction.
-      bubbles.transition()
-        .duration(300)
-        .style('fill', d.color);
-    }
-  });*/
-
   return [
     () => addMainBubble(g, data, config, radiusScale),
     () => addBubbles(g, data, config, radiusScale, getSimulation, simulate),
     () => { addBubbles(g, data, config, radiusScale, getSimulation, simulate)
             changeColor(g, colorScale)},
-    () => addScatterPlot(g, professions, config, xScale, yScale, colorScale, rScale),
+    () => { if (g.selectAll(".scatter")["_groups"][0].length === 0) {
+            addScatterPlot(g, professions, config, xScale, yScale, colorScale, rScale)
+          }},
     () => {},
     // eslint-disable-next-line max-len
-    () => { g.selectAll(".circles circle").transition().duration(300).attr("fill", d => colorScale(d["Proportion de femmes"])) },
+    () => { g.selectAll(".circles circle").transition().duration(300).attr("fill", d => colorScale(d["Proportion de femmes"]))
+            g.selectAll(".legend").remove()
+            addLegend(g,colorScale)  
+          },
     () => { selectYellowBubbles(g)},
     () => { d3.selectAll(".barchart2").remove()
             addBubbleLabel(g,professions,xScale,yScale)}
@@ -123,6 +119,9 @@ function selectYellowBubbles(svg) {
     .filter(d => d["Proportion de femmes"] < 75)
     .attr("fill","rgb(135,163,175,0.6)")
 
+  svg.selectAll('.cell rect')
+    .filter(d => d < 75)
+    .attr('fill',"rgb(135,163,175,0.6)")
 }
 
 
@@ -162,7 +161,7 @@ function addScatterPlot(svg, data, size, xScale, yScale, colorScale, rScale) {
 function appendSizeLegend (svg,rScale) {
 
   const legend = svg.append('g')
-    .attr('class','legend');
+    .attr('class','size-legend');
 
   const cells = [150000, 50000]
   const labels = ["150k","50k"]
