@@ -52,8 +52,7 @@ function addDonutChart (canvas, data, config, sexe) {
 canvas.selectAll('.pie').remove();
 
 // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
-const radius = Math.min(config.width, config.height) / 2.5
-
+const radius = Math.min(config.width, config.height) / 2.9
 // set the color scale
 const color = d3.scaleOrdinal()
   .domain(['Aucun symptôme','Symptômes légérs', 'Symptômes modérés ou graves'])

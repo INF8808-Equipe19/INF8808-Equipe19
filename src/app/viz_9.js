@@ -40,13 +40,15 @@ export async function initialize() {
   const yScale = setYScale(config, data);
 
   return [
-    () => addBarChart(g,data,config,xScale,yScale),
+    () => addBarChart1(g,data,config,xScale,yScale),
+    () => addBarChart2(g,data,config,xScale,yScale),
+    () => appendRects(g, data, config, xScale, yScale)
   ]
 
 }
 
-function addBarChart (canvas, data, config, xScale, yScale) {
-
+function addBarChart1 (canvas, data, config, xScale, yScale) {
+  canvas.select('.barChart9').remove()
   canvas.append('g').attr('class','barChart9');
   const barChart = canvas.selectAll('.barChart9')
 
@@ -56,13 +58,68 @@ function addBarChart (canvas, data, config, xScale, yScale) {
   drawYAxis(yScale, canvas)
   drawXAxis(xScale,config, canvas)
 
-  appendRects(canvas, data, config, xScale, yScale)
-  appendGraphLabels(canvas,config)
+  appendGraphLabels(barChart,config)
 }
 
+function addBarChart2 (canvas, data, config, xScale, yScale) {
+  canvas.select('.barChart9').remove()
+  canvas.append('g').attr('class','barChart9');
+  const barChart = canvas.selectAll('.barChart9')
+
+  barChart.append('g').attr('class','y axis9')
+  barChart.append('g').attr('class','x axis9')
+
+  drawYAxis(yScale, canvas)
+  drawXAxis(xScale,config, canvas)
+
+  appendGraphLabels(barChart,config)
+  // Ajout de la zone modérée
+  barChart.append('g')
+  .attr('class','zone')
+  .append('rect')
+  .attr('x',0)
+  .attr('y',yScale(13))
+  .attr('height',config.height-yScale(5))
+  .attr('width',config.width)
+  .attr('fill','#d0d0e6')
+  .style('opacity',0)
+  .transition()
+  .duration(300)
+  .style('opacity',0.75);
+ 
+  d3.select('.zone')
+  .append('text')
+  .attr('text-anchor','middle')
+  .attr('x',config.width/2)
+  .attr('y',yScale(10.5))
+  .text('Symptômes modérés')
+  .attr('fill','rgb(100,100,100)');
+
+  // Ajout de la zone grave
+  d3.select('.zone')
+  .append('rect')
+  .attr('x',0)
+  .attr('y',yScale(24))
+  .attr('height',config.height-yScale(11))
+  .attr('width',config.width)
+  .attr('fill','#9e97c8')
+  .style('opacity',0)
+  .transition()
+  .duration(300)
+  .style('opacity',0.75);
+ 
+  d3.select('.zone')
+  .append('text')
+  .attr('text-anchor','middle')
+  .attr('x',config.width/2)
+  .attr('y',yScale(18))
+  .text("Probabilité d'une maladie mentale grave")
+  .attr('fill','rgb(75,75,75)');
+}
 
 function appendRects (canvas, data, config, xScale, yScale) {
   
+  d3.select('.zone').transition().duration(300).style('opacity',0.2);
   canvas.select('.barChart9').append('g').attr('class','bars9');
 
   const bars = canvas.selectAll('.bars9');
@@ -73,13 +130,14 @@ function appendRects (canvas, data, config, xScale, yScale) {
   .enter()
   .append('rect')
   .attr('x', d => xScale(d.sexe)+xScale.bandwidth()/2-barWidth/2)
-  .attr('y', d => yScale(d.valeur))
+  .attr('y', config.height)
   .attr('width', barWidth)
-  .attr('height', d => config.height-yScale(d.valeur))
+  .attr('height', 0)
   .attr('fill', d => (d.sexe == 'Femmes' ? '#fec636' : d.sexe == 'Hommes' ? '#00b4cf' : '#7fbd83'))
-  .style('opacity','0');
-
-  bars.selectAll('rect').transition().duration(300).style('opacity',1);
+  .transition()
+  .duration(300)
+  .attr('height', d => config.height-yScale(d.valeur))
+  .attr('y', d => yScale(d.valeur));
 }
 
 
