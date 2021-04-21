@@ -42,16 +42,10 @@ export async function initialize() {
     const marginLeft = config.margin["left"]
     const xScale = scales.setXScale(data,width);
     const yScale = scales.setYScale(data,height)
-    
-    /*const radiusScale = setRadiusScale(config.height, data);
-    const colorScale = setColorScale()
-    const xScale = setXScale(config.width)
-    const yScale = setYScale(config.height)
-    const rScale = setRScale(professions)*/
 
     return [
         () => callbacks.buildBarChart(g, data, width, height, marginLeft, xScale, yScale),
-        () => callbacks.appendWomenBars(g,xScale)
+        () => callbacks.appendWomenBars(g,xScale,height)
     ]
 
 }

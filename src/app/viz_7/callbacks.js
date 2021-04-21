@@ -21,12 +21,15 @@ export function buildBarChart(svg, data, width, height, marginLeft, xScale, ySca
     axis.appendGraphLabels(svg,width,height)
 }
 
-export function appendWomenBars(svg, xScale) {
+export function appendWomenBars(svg, xScale, height) {
 
     svg.selectAll('rect.femmes')
         .transition()
         .duration(300)
         .attr('width', d => xScale(d["femme"]))
+    
+    addLegend(svg)
+    svg.select('.legend').attr('transform','translate(5,'+(height+50)+')')
 
 }
 
@@ -34,6 +37,8 @@ function appendBars(svg,data,xScale,yScale) {
   
     const bars = svg.selectAll('.barchart2').append('g').attr('class','bars');
     const womenWidth = 0.5
+
+    svg.select('.legend').remove()
     
     if (svg.selectAll(".bars rect")["_groups"].length === 1) {
   
@@ -68,3 +73,31 @@ function appendBars(svg,data,xScale,yScale) {
 
 }
 
+function addLegend(g) {
+
+    g.append('g').attr('class','legend');
+    const legend = g.select('.legend')
+  
+    const cells = ['rgb(211, 224, 230)','#fec636']
+    const labels = ['Toutes les entreprises', 'Entreprises détenues par des femmes']
+  
+    legend.selectAll('cells')
+      .data(cells)
+      .enter()
+      .append('g')
+      .attr('class','cell')
+      .append('rect')
+      .attr('height','20')
+      .attr('width','20')
+      .attr('transform', (d,i) => 'translate(0,' + 22 * i + ')')
+      .attr('fill', d => d);
+  
+    legend.selectAll('.cell')
+      .append('text')
+      .text((d,i) => labels[i])
+      .attr('transform', (d,i) => 'translate(25,' + (10+22 * i) +')')
+      .attr('dominant-baseline','middle')
+      .attr('font-size',12);
+  
+  
+  }

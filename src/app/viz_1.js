@@ -131,9 +131,12 @@ function updateRects (canvas, data, config, xScale, yScale,xSubgroupScale) {
   // Changement des axes
   drawYAxis(yScale)
   drawXAxis(xScale,config)
-// Sélection de l'axe et rotation des éléments textuels des ticks
-d3.select(".x.axis1").selectAll("g").selectAll("text")
-.attr("transform", 'translate(0,7),rotate(-25)');
+  // Sélection de l'axe et rotation des éléments textuels des ticks
+  d3.select(".x.axis1").selectAll("g").selectAll("text")
+  .attr("transform", 'translate(0,7),rotate(-25)');
+ 
+  addLegend(barChart);
+  barChart.select('.legend').attr('transform','translate(10,0)');
 }
 
 function updateRects2 (canvas, data, config, xScale, yScale,xSubgroupScale) {
@@ -169,9 +172,12 @@ function updateRects2 (canvas, data, config, xScale, yScale,xSubgroupScale) {
   // Changement des axes
   drawYAxis(yScale)
   drawXAxis(xScale,config)
-// Sélection de l'axe et rotation des éléments textuels des ticks
-d3.select(".x.axis1").selectAll("g").selectAll("text")
-.attr("transform", 'translate(0,7),rotate(-25)');
+  // Sélection de l'axe et rotation des éléments textuels des ticks
+  d3.select(".x.axis1").selectAll("g").selectAll("text")
+  .attr("transform", 'translate(0,7),rotate(-25)');
+
+  addLegend(barChart);
+  barChart.select('.legend').attr('transform','translate(10,0)');
 }
 
 
@@ -324,4 +330,33 @@ function appendGraphLabels (g,config) {
     .attr('font-size', 15)
     .attr('text-anchor','middle')
     .attr('font-weight','bold');
+}
+
+function addLegend(g) {
+
+  g.append('g').attr('class','legend');
+  const legend = g.select('.legend')
+
+  const cells = ['#00b4cf','#fec636']
+  const labels = ['Hommes', 'Femmes']
+
+  legend.selectAll('cells')
+    .data(cells)
+    .enter()
+    .append('g')
+    .attr('class','cell')
+    .append('rect')
+    .attr('height','20')
+    .attr('width','20')
+    .attr('transform', (d,i) => 'translate(0,' + 22 * i + ')')
+    .attr('fill', d => d);
+
+  legend.selectAll('.cell')
+    .append('text')
+    .text((d,i) => labels[i])
+    .attr('transform', (d,i) => 'translate(25,' + (10+22 * i) +')')
+    .attr('dominant-baseline','middle')
+    .attr('font-size',12);
+
+
 }
