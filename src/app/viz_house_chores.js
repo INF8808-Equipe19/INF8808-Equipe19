@@ -21,8 +21,8 @@ const config = {
         spacing: 18
       },
     width: 200,
-    leftTitle: "2013",
-    rightTitle: "2016",
+    leftTitle: "2020",
+    rightTitle: "2021",
     labelGroupOffset: 5,
     labelKeyOffset: 50,
     radius: 6,
@@ -40,6 +40,7 @@ const g = svg.append('g')
     .attr('transform', `translate(${config.margin.left}, ${config.margin.top})`);
 
 
+var xScale = d3.scaleLinear().range([0, config.width])
 var yScale = d3.scaleLinear().range([config.height, 0])
 
 /**
@@ -56,57 +57,38 @@ export async function initialize() {
 
 }
 
-/**
- * 
- * @param {*} width 
- * @returns 
- */
-function setXScale(width) {
-    return d3.scaleLinear().domain([0, 100]).range([0, width])
-}
-
-
-
-
-
 
 
 function addSlopeChart(canvas, data, config) {
 
+    canvas.select('.houseChores').remove()
+    canvas.append('g').attr('class','houseChores');
+    const houseChores = canvas.selectAll('.houseChores')
 
-    // Combine ratios into a single array
-    var ratios = [];
-    data.pay_ratios_2012_13.forEach(function (d) {
-        d.year = "2012-2013";
-        ratios.push(d);
-    });
-    data.pay_ratios_2015_16.forEach(function (d) {
-        d.year = "2015-2016";
-        ratios.push(d);
-    });
+    houseChores.append('g').attr('class','y axisChores')
+    houseChores.append('g').attr('class','x axisChores')
 
-    // Nest by university
+    drawYAxis(yScale, config)
+    drawXAxis(xScale, config)
+
+    appendGraphLabels(houseChores, config)
+
+    // Nest by sex 
     var nestedByName = d3.nest()
         .key(function (d) {
-            return d.name
+            return d.sex
         })
-        .entries(ratios);
+        .entries(data);
 
-    // Filter out those that only have data for a single year
-    nestedByName = nestedByName.filter(function (d) {
-        return d.values.length > 1;
-    });
+
 
     var y1Min = d3.min(nestedByName, function (d) {
-        var ratio1 = d.values[0].max / d.values[0].min;
-        var ratio2 = d.values[1].max / d.values[1].min;
-
         return Math.min(ratio1, ratio2);
     });
 
     var y1Max = d3.max(nestedByName, function (d) {
-        var ratio1 = d.values[0].max / d.values[0].min;
-        var ratio2 = d.values[1].max / d.values[1].min;
+        var ratio1 = d.values[0].value;
+        var ratio2 = d.values[1].value;
 
         return Math.max(ratio1, ratio2);
     });
@@ -114,7 +96,7 @@ function addSlopeChart(canvas, data, config) {
     // Calculate y domain for ratios
     yScale.domain([y1Min, y1Max]);
 
-    var borderLines = g.append("g")
+    var borderLines = houseChores.append("g")
         .attr("class", "border-lines")
     borderLines.append("line")
         .attr("x1", 0).attr("y1", 0)
@@ -123,7 +105,7 @@ function addSlopeChart(canvas, data, config) {
         .attr("x1", config.width).attr("y1", 0)
         .attr("x2", config.width).attr("y2", config.height);
 
-    var slopeGroups = g.append("g")
+    var slopeGroups = houseChores.append("g")
         .selectAll("g")
         .data(nestedByName)
         .enter().append("g")
@@ -138,22 +120,22 @@ function addSlopeChart(canvas, data, config) {
         .attr("class", "slope-line")
         .attr("x1", 0)
         .attr("y1", function (d) {
-            return yScale(d.values[0].max / d.values[0].min);
+            return yScale(d.values[0].value);
         })
         .attr("x2", config.width)
         .attr("y2", function (d) {
-            return yScale(d.values[1].max / d.values[1].min);
+            return yScale(d.values[1].value);
         });
 
     var leftSlopeCircle = slopeGroups.append("circle")
         .attr("r", config.radius)
-        .attr("cy", d => yScale(d.values[0].max / d.values[0].min));
+        .attr("cy", d => yScale(d.values[0].value));
 
     var leftSlopeLabels = slopeGroups.append("g")
         .attr("class", "slope-label-left")
         .each(function (d) {
             d.xLeftPosition = -config.labelGroupOffset;
-            d.yLeftPosition = yScale(d.values[0].max / d.values[0].min);
+            d.yLeftPosition = yScale(d.values[0].value);
         });
 
     leftSlopeLabels.append("text")
@@ -163,7 +145,7 @@ function addSlopeChart(canvas, data, config) {
         .attr("dx", -10)
         .attr("dy", 3)
         .attr("text-anchor", "end")
-        .text(d => (d.values[0].max / d.values[0].min).toPrecision(3));
+        .text(d => (d.values[0].max / d.values[0].value).toPrecision(3));
 
     leftSlopeLabels.append("text")
         .attr("x", d => d.xLeftPosition)
@@ -176,7 +158,7 @@ function addSlopeChart(canvas, data, config) {
     var rightSlopeCircle = slopeGroups.append("circle")
         .attr("r", config.radius)
         .attr("cx", config.width)
-        .attr("cy", d => yScale(d.values[1].max / d.values[1].min))
+        .attr("cy", d => yScale(d.values[1].value))
         .attr("fill", "red")
         .attr("stroke", "black")
         .attr("stroke-width", "2px");
@@ -185,7 +167,7 @@ function addSlopeChart(canvas, data, config) {
         .attr("class", "slope-label-right")
         .each(function (d) {
             d.xRightPosition = config.width + config.labelGroupOffset;
-            d.yRightPosition = yScale(d.values[1].max / d.values[1].min);
+            d.yRightPosition = yScale(d.values[1].value);
         });
 
     rightSlopeLabels.append("text")
@@ -195,29 +177,32 @@ function addSlopeChart(canvas, data, config) {
         .attr("dx", 10)
         .attr("dy", 3)
         .attr("text-anchor", "start")
-        .text(d => (d.values[1].max / d.values[1].min).toPrecision(3));
+        .text(d => (d.values[1].value).toPrecision(3));
 
     rightSlopeLabels.append("text")
         .attr("x", d => d.xRightPosition)
         .attr("y", d => d.yRightPosition)
         .attr("dx", config.labelKeyOffset)
         .attr("dy", 3)
+
         .attr("text-anchor", "start")
         .text(d => d.key);
 
-    var titles = svg.append("g")
+    var titles = canvas.append("g")
         .attr("class", "title");
 
     titles.append("text")
         .attr("text-anchor", "end")
-        .attr("dx", -10)
-        .attr("dy", -config.margin.top / 2)
+        .attr("dx", 20)
+        .attr("dy", -config.margin.top / 2 + 10)
+        .attr('font-size', 14)
         .text(config.leftTitle);
 
     titles.append("text")
         .attr("x", config.width)
-        .attr("dx", 10)
-        .attr("dy", -config.margin.top / 2)
+        .attr("dx", -15)
+        .attr("dy", -config.margin.top / 2 + 10)
+        .attr('font-size', 14)
         .text(config.rightTitle);
 
     //relax(leftSlopeLabels, "yLeftPosition");
@@ -243,3 +228,43 @@ function addSlopeChart(canvas, data, config) {
         .on("mouseover", mouseover)
         .on("mouseout", mouseout); */
 }
+
+/**
+ * 
+ * @param {*} yScale 
+ */
+ function drawYAxis (yScale,config) {
+    d3.select('.y.axisChores')
+      .call(d3.axisLeft(yScale).tickSizeInner(-config.width-5).tickSizeOuter(0).tickArguments([5, '.0r']))
+  
+    d3.select('.y.axisChores').selectAll(".tick text").attr("transform",'translate(-10,0)')
+    d3.select('.y.axisChores').selectAll(".tick line").attr("transform",'translate(-5,0)').attr('stroke','rgb(135,163,175,0.6)')
+    d3.select('.y.axisChores').selectAll("path").attr('stroke','rgb(135,163,175,0.6)')
+  }
+
+  /**
+   * Draws the X axis at the bottom of the diagram.
+   *
+   * @param {*} xScale The scale to use to draw the axis
+   * @param {number} config The height of the graphic
+   */
+function drawXAxis (xScale, config) {
+    d3.select('.x.axisChores')
+      .attr('transform', 'translate( 0, ' + config.height + ')')
+      .text('allo')
+      .attr('font-size', 15)
+ }
+  
+ /**
+ * Appends the legend for the the y axis and the title of the graph.
+ *
+ * @param {*} g The d3 Selection of the graph's g SVG element
+ */
+function appendGraphLabels (g,config) {
+    g.append('text')
+      .text("%")
+      .attr('class', 'y axis9-text tick')
+      .attr('transform', 'translate(-60,'+ config.height/2 +')')
+      .attr('font-size', 15)
+      .attr('text-anchor','middle')
+  }

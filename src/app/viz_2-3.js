@@ -599,7 +599,7 @@ function getSimulation (data, radiusScale) {
  * @param {*} simulation The simulation used to position the cirles.
  */
 function simulate (simulation) {
-  simulation.on('tick', () => {
+  simulation.on('tick', () => {a
     d3.selectAll('.bubble')
       .attr('cx', (d) => d.x + config.width/2)
       .attr('cy', (d) => d.y + config.height/2)
