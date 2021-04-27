@@ -10,15 +10,16 @@ export function buildBarChart(svg, data, width, height, marginLeft, xScale, ySca
     const barchart = svg.selectAll(".barchart2");
 
     barchart.append('g').attr('class', 'x axis');
-    barchart.append('g').attr('class', 'y axis');
 
     axis.drawXAxis(xScale, width, height)
 
     appendBars(svg,data,xScale,yScale)
 
+    barchart.append('g').attr('class', 'y axis');
+
     axis.drawYAxis(yScale, marginLeft)
 
-    axis.appendGraphLabels(svg,width,height)
+    axis.appendGraphLabels(barchart,width,height)
 }
 
 export function appendWomenBars(svg, xScale, height) {
@@ -28,7 +29,7 @@ export function appendWomenBars(svg, xScale, height) {
         .duration(300)
         .attr('width', d => xScale(d["femme"]))
     
-    addLegend(svg)
+    addLegend(svg.select(".barchart2"))
     svg.select('.legend').attr('transform','translate(5,'+(height+50)+')')
 
 }
