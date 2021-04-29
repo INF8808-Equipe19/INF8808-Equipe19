@@ -5,6 +5,8 @@
  */
 
 import * as d3 from 'd3';
+import * as legend from './legend.js';
+import * as scales from './scales.js';
 
 const config = {
   height: 500,
@@ -35,11 +37,11 @@ export async function initialize() {
   const data = await d3.csv('./data/eclosions.csv');
   const professions = await d3.csv('./data/professions.csv');
 
-  const radiusScale = setRadiusScale(config.height, data);
-  const colorScale = setColorScale()
-  const xScale = setXScale(config.width)
-  const yScale = setYScale(config.height)
-  const rScale = setRScale(professions)
+  const radiusScale = scales.setRadiusScale(config.height, data);
+  const colorScale = scales.setColorScale()
+  const xScale = scales.setXScale(config.width)
+  const yScale = scales.setYScale(config.height)
+  const rScale = scales.setRScale(professions)
 
   return [
     () => addMainBubble(g, data, config, radiusScale),
@@ -53,7 +55,7 @@ export async function initialize() {
     // eslint-disable-next-line max-len
     () => { g.selectAll(".circles circle").transition().duration(300).attr("fill", d => colorScale(d["Proportion de femmes"]))
             g.selectAll(".legend").remove()
-            addLegend(g,colorScale)  
+            legend.addLegend(g,colorScale)  
           },
     () => { selectYellowBubbles(g)},
     () => { d3.selectAll(".barchart2").remove()
@@ -117,11 +119,7 @@ function selectYellowBubbles(svg) {
 
   svg.select(".circles").selectAll("circle")
     .filter(d => d["Proportion de femmes"] < 75)
-    .attr("fill","rgb(135,163,175,0.6)")
-
-  svg.selectAll('.cell rect')
-    .filter(d => d < 75)
-    .attr('fill',"rgb(135,163,175,0.6)")
+    .attr("fill","rgb(135,163,175,0.4)")
 }
 
 
@@ -152,52 +150,9 @@ function addScatterPlot(svg, data, size, xScale, yScale, colorScale, rScale) {
 
   addScatterBubbles(scatter,data,xScale,yScale,colorScale,rScale,size)
 
-  appendSizeLegend(scatter,rScale)
-  addLegend(scatter, colorScale)
+  legend.appendSizeLegend(scatter,rScale)
+  legend.addLegend(scatter,colorScale)
   
-
-}
-
-function appendSizeLegend (svg,rScale) {
-
-  const legend = svg.append('g')
-    .attr('class','size-legend');
-
-  const cells = [150000, 50000]
-  const labels = ["150k","50k"]
-
-  legend.selectAll('cells')
-    .data(cells)
-    .enter()
-    .append('g')
-    .attr('class','cell')
-    .append('circle')
-    .attr('cx',rScale(150000))
-    .attr('cy', d => rScale(d))
-    .attr('fill','white')
-    .attr('stroke','black')
-    .attr('r', d => rScale(d));
-
-  legend.selectAll('.cell')
-    .append('text')
-    .text((d,i) => labels[i])
-    .attr('transform', (d,i) => {
-      if (i === 0) {
-        return 'translate('+rScale(cells[0])+','+(2*rScale(cells[1])+(rScale(cells[0])-rScale(cells[1])))+')'
-      } if (i === 1) {
-        return 'translate('+rScale(cells[0])+','+rScale(cells[1])+')'
-      }
-    })
-    .attr('dominant-baseline','middle')
-    .attr('text-anchor','middle')
-    .attr('font-size',12);
-
-  legend.append('text')
-    .text('Nombre de travailleurs')
-    .attr('transform', 'translate(0,-10)')
-    .attr('font-size',12);
-
-  legend.attr('transform', 'translate(40,100)')
 
 }
 
@@ -248,35 +203,7 @@ function addScatterBubbles(svg,data,xScale,yScale,colorScale,rScale,size) {
       .attr('stroke','white');
   }
 }
-/**
- * 
- * @param {*} data 
- * @returns 
- */
-function setRScale (data) {
 
-  return d3.scaleSqrt()
-    .domain([d3.min(data, d=>Number(d['Nombre total (Québec)'])),d3.max(data, d=>Number(d['Nombre total (Québec)']))])
-    .range([2,20]); 
-}
-
-/**
- * 
- * @param {*} width 
- * @returns 
- */
-function setXScale (width) {
-  return d3.scaleLinear().domain([0,100]).range([0, width]) 
-}
-
-/**
- * 
- * @param {*} height 
- * @returns 
- */
-function setYScale (height) {
-  return d3.scaleLinear().domain([0,100]).range([height, 0]) 
-}
 
 /**
  * 
@@ -307,78 +234,6 @@ function drawYAxis (yScale,width) {
   d3.select('.y.axis').selectAll("path").attr('stroke','rgb(135,163,175,0.6)')
 }
 
-/**
- * Defines the scale to use for the bubbles' color.
- * 
- * @returns linear scale used to fill the bubbles
- */
-function setColorScale() {
-  
-  //return d3.scaleLinear().domain([0,100]).range(['rgb(4,181,208,1)','rgb(255,200,54,1)'])
-  return d3.scaleLinear().domain([0,100]).range(['rgb(135,163,175)','rgb(255,200,54,1)'])
-}
-
-/**
- * Defines the scale to use for the bubbles' radius.
- * 
- * @param {number} height The height of the graph
- * @param {object} data The data to be displayed
- * @returns {*} The square root scale used to determine the radius
- */
-function setRadiusScale (height, data) {
-
-  return d3.scaleSqrt()
-           .domain([0,d3.sum(data, d => d.Nombre_eclosions)])
-           .range([0,height/4])
-
-}
-
-/**
- * 
- * @param {*} svg 
- * @param {*} colorScale 
- */
-function addLegend(svg, colorScale) {
-
-  const legend = svg.append('g')
-    .attr('class','legend');
-
-  const cells = [0,25,50,75,100]
-
-  legend.selectAll('cells')
-    .data(cells)
-    .enter()
-    .append('g')
-    .attr('class','cell')
-    .append('rect')
-    .attr('height','10')
-    .attr('width','30')
-    .attr('transform', (d,i) => 'translate(' + 32 * i + ',0)')
-    .attr('fill',d => colorScale(d));
-
-  legend.selectAll('.cell')
-    .append('text')
-    .text(d => {
-        if (d === 0) {
-          return "0%"
-        } else {
-          return d
-        }
-    })
-    .attr('transform', (d,i) => 'translate(' + (32 * i + 30/2) +',25)')
-    .attr('text-anchor','middle')
-    .attr('font-size',12);
-
-  legend.append('text')
-    .text('Proportion de femmes')
-    .attr('transform', 'translate(0,-10)')
-    .attr('font-size',12);
-
-  legend.attr('transform', 'translate(40,30)')
-
-
-}
-
 
 /**
  * Changes the color of the bubbles and adds the legend
@@ -398,8 +253,10 @@ function changeColor (svg,colorScale) {
             return colorScale(d.Proportion_femmes)
           }
         });
+  
+  svg.selectAll('text').attr('fill','black')
 
-  addLegend(svg.select(".milieux"),colorScale)
+  legend.addLegend(svg.select(".milieux"),colorScale)
 
 }
 
