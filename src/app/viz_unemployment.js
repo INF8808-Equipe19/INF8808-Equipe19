@@ -89,6 +89,7 @@ function addSlopeChart(canvas, data, config, titleText) {
 
     var y1Min = 0
     var y1Max = 10
+    config.yScale.domain([y1Min, y1Max]);
 
     drawYAxis(config.yScale, config)
     drawXAxis(config.xScale, config)
@@ -102,8 +103,7 @@ function addSlopeChart(canvas, data, config, titleText) {
         })
         .entries(data);
 
-    // Calculate y domain for ratios
-    config.yScale.domain([y1Min, y1Max]);
+
 
     var borderLines = unemploymentRates.append("g")
         .attr("class", "border-lines")
@@ -139,8 +139,6 @@ function addSlopeChart(canvas, data, config, titleText) {
         .attr('font-size', 14)
         .text(config.rightTitle);
     
-    var title = canvas.append("g")
-        .append("class", "title")
     
     unemploymentRates.append("text")
         .attr("class", "title")
@@ -209,19 +207,6 @@ function drawYAxis(yScale, config) {
     d3.select('.y.axisUnemployment').selectAll(".tick text").attr("transform", 'translate(-10,0)')
     d3.select('.y.axisUnemployment').selectAll(".tick line").attr("transform", 'translate(-5,0)').attr('stroke', 'rgb(135,163,175,0.6)')
     d3.select('.y.axisUnemployment').selectAll("path").attr('stroke', 'rgb(135,163,175,0.6)')
-}
-
-/**
- * Draws the X axis at the bottom of the diagram.
- *
- * @param {*} xScale The scale to use to draw the axis
- * @param {number} config The height of the graphic
- */
-function drawXAxis(xScale, config) {
-    d3.select('.x.axisUnemployment')
-        .attr('transform', 'translate( 0, ' + config.height + ')')
-        .text('allo')
-        .attr('font-size', 15)
 }
 
 /**
