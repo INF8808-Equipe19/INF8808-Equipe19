@@ -6,43 +6,47 @@
 
 import * as d3 from 'd3';
 
-const config = {
-    xOffset: 0,
-    yOffset: 0,
-    height: 500,
-    margin: {
-        bottom: 100,
-        left: 100,
-        right: 100,
-        top: 100
-    },
-    labelPositioning: {
-        alpha: 0.5,
-        spacing: 18
-    },
-    width: 200,
-    leftTitle: "2020",
-    rightTitle: "2021",
-    labelGroupOffset: 5,
-    labelKeyOffset: 50,
-    radius: 5,
-    // Reduce this to turn on detail-on-hover version
-    unfocusOpacity: 0.3
+function configInit() {
+    var config = {
+        xOffset: 0,
+        yOffset: 0,
+        height: 500,
+        margin: {
+            bottom: 100,
+            left: 100,
+            right: 100,
+            top: 100
+        },
+        labelPositioning: {
+            alpha: 0.5,
+            spacing: 18
+        },
+        width: 200,
+        leftTitle: "2020",
+        rightTitle: "2021",
+        labelGroupOffset: 5,
+        labelKeyOffset: 50,
+        radius: 5,
+        // Reduce this to turn on detail-on-hover version
+        unfocusOpacity: 0.3,
+    }
+
+    config.xScale = d3.scaleLinear().range([0, config.width]);
+    config.yScale = d3.scaleLinear().range([config.height, 0]);
+
+    const fullWidth = config.margin.left + config.width + config.margin.right;
+    const fullHeight = config.margin.top + config.height + config.margin.bottom;
+
+    const visContainer = d3.select('#unemployment');
+    const svg = visContainer.append('svg')
+        .attr('viewBox', `0 0 ${fullWidth} ${fullHeight}`)
+        .attr('preserveAspectRatio', 'xMidYMid');
+    const g = svg.append('g')
+        .attr('transform', `translate(${config.margin.left}, ${config.margin.top})`);
+
+    return [g,config];
+
 }
-const fullWidth = config.margin.left + config.width + config.margin.right;
-const fullHeight = config.margin.top + config.height + config.margin.bottom;
-
-const visContainer = d3.select('#unemployment');
-const svg = visContainer.append('svg')
-    .attr('viewBox', `0 0 ${fullWidth} ${fullHeight}`)
-    .attr('preserveAspectRatio', 'xMidYMid');
-const g = svg.append('g')
-    .attr('transform', `translate(${config.margin.left}, ${config.margin.top})`);
-
-
-var xScale = d3.scaleLinear().range([0, config.width])
-var yScale = d3.scaleLinear().range([config.height, 0])
-
 /**
  * Initializes the visualization
  *
@@ -50,6 +54,9 @@ var yScale = d3.scaleLinear().range([config.height, 0])
  */
 export async function initialize() {
     var data = await d3.json("./data/chores.json");
+
+    var g = configInit()[0];
+    var config = configInit()[1];
 
     return [
         () => addSlopeChart(g, data, config),
@@ -72,8 +79,8 @@ function addSlopeChart(canvas, data, config) {
     var y1Min = 0
     var y1Max = 10
 
-    drawYAxis(yScale, config)
-    drawXAxis(xScale, config)
+    drawYAxis(config.yScale, config)
+    drawXAxis(config.xScale, config)
 
     appendGraphLabels(unemploymentRates, config)
 
@@ -85,7 +92,7 @@ function addSlopeChart(canvas, data, config) {
         .entries(data);
 
     // Calculate y domain for ratios
-    yScale.domain([y1Min, y1Max]);
+    config.yScale.domain([y1Min, y1Max]);
 
     var borderLines = unemploymentRates.append("g")
         .attr("class", "border-lines")
@@ -98,10 +105,10 @@ function addSlopeChart(canvas, data, config) {
 
 
 
-    addSlope(unemploymentRates, nestedByName[0],
+    addSlope(unemploymentRates, config, nestedByName[0],
         '#fec636');
 
-    addSlope(unemploymentRates, nestedByName[1],
+    addSlope(unemploymentRates, config, nestedByName[1],
         '#00b4cf');
 
     var xAxis = canvas.append("g")
@@ -154,7 +161,7 @@ function addSlopeChart(canvas, data, config) {
  * 
  *
  */
-function addSlope(canvas, data, color) {
+function addSlope(canvas, config, data, color) {
 
     var sexSlope = canvas.append("g")
         .selectAll("g")
@@ -178,18 +185,18 @@ function addSlope(canvas, data, color) {
         .attr("class", "slope-line")
         .attr("x1", 0)
         .attr("y1", function (d) {
-            return yScale(d.values[0].value);
+            return config.yScale(d.values[0].value);
         })
         .attr("x2", config.width)
         .attr("y2", function (d) {
-            return yScale(d.values[1].value);
+            return config.yScale(d.values[1].value);
         })
         .attr("stroke", color)
         .attr("stroke-width", "3px");
 
     var leftSlopeCircle = sexSlope.append("circle")
         .attr("r", config.radius)
-        .attr("cy", d => yScale(d.values[0].value))
+        .attr("cy", d => config.yScale(d.values[0].value))
         .attr("fill", color)
 
     /*     var leftSlopeLabels = sexSlope.append("g")
@@ -219,7 +226,7 @@ function addSlope(canvas, data, color) {
     var rightSlopeCircle = sexSlope.append("circle")
         .attr("r", config.radius)
         .attr("cx", config.width)
-        .attr("cy", d => yScale(d.values[1].value))
+        .attr("cy", d => config.yScale(d.values[1].value))
         .attr("fill", color)
 
     /*     var rightSlopeLabels = sexSlope.append("g")
