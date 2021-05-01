@@ -29,6 +29,7 @@ export function appendWomenBars(svg, xScale, height) {
         .duration(300)
         .attr('width', d => xScale(d["femme"]))
     
+    svg.select(".legend").remove()    
     addLegend(svg.select(".barchart2"))
     svg.select('.legend').attr('transform','translate(5,'+(height+50)+')')
 

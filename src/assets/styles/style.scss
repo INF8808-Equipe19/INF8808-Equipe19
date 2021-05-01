@@ -59,18 +59,29 @@ main {
   position: relative;
 }
 
+.background {
+  background-color: black;
+}
+
 .text-section {
   max-width: $text-max-width;
-  padding: $main-padding;
-  margin: 5em auto;
+  padding: 5em 25px; //$main-padding
+  margin: auto auto; //5em auto
   box-sizing: content-box;
 
   &.intro h1 {
-    font-size: 3.2em;
+    font-size: 4em;
+    color : white;
+  }
+
+  h2 {
+    font-size: $step-heading-font-size*1.25;
+    color: white
   }
 
   p {
     margin-bottom: 0.8em;
+    color: white
   }
 }
 

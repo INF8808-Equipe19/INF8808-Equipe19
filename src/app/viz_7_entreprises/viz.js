@@ -41,7 +41,7 @@ export async function initialize() {
     const height = config.height;
     const marginLeft = config.margin["left"]
     const xScale = scales.setXScale(data,width);
-    const yScale = scales.setYScale(data,height)
+    const yScale = scales.setYScale(data,height);
 
     return [
         () => callbacks.buildBarChart(g, data, width, height, marginLeft, xScale, yScale),
