@@ -56,6 +56,7 @@ export async function initialize() {
       bubbles.addBubbles(g, data, config, radiusScale, getSimulation, simulate);
       bubbles.changeColor(g, colorScale)
       legend.addLegend(g, colorScale)
+      scatterTrigger = false;
     },
     // Professions à risque
     () => {
