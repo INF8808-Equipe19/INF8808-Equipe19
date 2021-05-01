@@ -10,7 +10,7 @@ function configInit() {
     var config = {
         xOffset: 0,
         yOffset: 0,
-        height: 500,
+        height: 300,
         margin: {
             bottom: 100,
             left: 100,
@@ -21,7 +21,7 @@ function configInit() {
             alpha: 0.5,
             spacing: 18
         },
-        width: 200,
+        width: 300,
         leftTitle: "2020",
         rightTitle: "2021",
         labelGroupOffset: 5,
@@ -29,6 +29,7 @@ function configInit() {
         radius: 5,
         // Reduce this to turn on detail-on-hover version
         unfocusOpacity: 0.3,
+        Title: "Taux de chômage au"
     }
 
     config.xScale = d3.scaleLinear().range([0, config.width]);
@@ -53,21 +54,31 @@ function configInit() {
  * @returns {Promise<*>}  A promise that contains a list of callbacks.
  */
 export async function initialize() {
-    var data = await d3.json("./data/chores.json");
+    var QCdata = await d3.json("./data/unemployment_QC.json");
+    var CAdata = await d3.json("./data/unemployment_CA.json");
+    var USAdata = await d3.json("./data/unemployment_USA.json");
 
     var g = configInit()[0];
     var config = configInit()[1];
 
     return [
-        () => addSlopeChart(g, data, config),
+        () => addSlopeChart(g, QCdata, config, " Québec"),
+        () => addSlopeChart(g, QCdata, config, " Québec"),
+        () => addSlopeChart(g, CAdata, config, " Canada"),
+        () => addSlopeChart(g, CAdata, config, " Canada"),
+        () => addSlopeChart(g, USAdata, config, "x USA"),
+        () => addSlopeChart(g, USAdata, config, "x USA"),
     ]
-
 }
 
 
+/*
+ * 
+ *
+ */
+function addSlopeChart(canvas, data, config, titleText) {
 
-function addSlopeChart(canvas, data, config) {
-
+    canvas.selectAll("g").remove();
     canvas.select('.unemployment').remove()
     canvas.append('g').attr('class', 'unemployment');
     const unemploymentRates = canvas.selectAll('.unemployment')
@@ -131,30 +142,15 @@ function addSlopeChart(canvas, data, config) {
     var title = canvas.append("g")
         .append("class", "title")
     
-    title.append("text")
-        .attr("x", config.width)
-        .attr("dx", -15)
-        .attr("dy", config.height + 30)
-        .attr('font-size', 20)
-        .text("Québec");
-    
-
-
-    /*  d3.selectAll(".slope-group")
-         .attr("opacity", config.unfocusOpacity); */
-    /*
-        var voronoiGroup = svg.append("g")
-            .attr("class", "voronoi");
-
-        voronoiGroup.selectAll("path")
-            .data(voronoi.polygons(d3.merge(nestedByName.map(d => d.values))))
-            .enter().append("path")
-            .attr("d", function (d) {
-                return d ? "M" + d.join("L") + "Z" : null;
-            })
-            .on("mouseover", mouseover)
-            .on("mouseout", mouseout); */
+    unemploymentRates.append("text")
+        .attr("class", "title")
+        .attr("text-anchor", "middle")
+        .attr("dx", 150)
+        .attr("dy", -25)
+        .attr('font-size', 16)
+        .text(config.Title + titleText);
 }
+
 
 
 /*
@@ -174,11 +170,6 @@ function addSlope(canvas, config, data, color) {
             d.values[1].group = this;
         });
 
-    /*         .slope-line {
-                stroke: #333;
-                stroke-width: 2px;
-                stroke-linecap: round;
-              } */
 
 
     var slopeLines = sexSlope.append("line")
@@ -199,69 +190,12 @@ function addSlope(canvas, config, data, color) {
         .attr("cy", d => config.yScale(d.values[0].value))
         .attr("fill", color)
 
-    /*     var leftSlopeLabels = sexSlope.append("g")
-            .attr("class", "slope-label-left")
-            .each(function (d) {
-                d.xLeftPosition = -config.labelGroupOffset;
-                d.yLeftPosition = yScale(d.values[0].value);
-            });
-
-        leftSlopeLabels.append("text")
-            .attr("class", "label-figure")
-            .attr("x", d => d.xLeftPosition)
-            .attr("y", d => d.yLeftPosition)
-            .attr("dx", -10)
-            .attr("dy", 3)
-            .attr("text-anchor", "end")
-            .text(d => (d.values[0].max / d.values[0].value).toPrecision(3));
-
-        leftSlopeLabels.append("text")
-            .attr("x", d => d.xLeftPosition)
-            .attr("y", d => d.yLeftPosition)
-            .attr("dx", -config.labelKeyOffset)
-            .attr("dy", 3)
-            .attr("text-anchor", "end")
-            .text(d => d.key); */
 
     var rightSlopeCircle = sexSlope.append("circle")
         .attr("r", config.radius)
         .attr("cx", config.width)
         .attr("cy", d => config.yScale(d.values[1].value))
         .attr("fill", color)
-
-    /*     var rightSlopeLabels = sexSlope.append("g")
-            .attr("class", "slope-label-right")
-            .each(function (d) {
-                d.xRightPosition = config.width + config.labelGroupOffset;
-                d.yRightPosition = yScale(d.values[1].value);
-            });
-
-        rightSlopeLabels.append("text")
-            .attr("class", "label-figure")
-            .attr("x", d => d.xRightPosition)
-            .attr("y", d => d.yRightPosition)
-            .attr("dx", 10)
-            .attr("dy", 3)
-            .attr("text-anchor", "start")
-            .text(d => (d.values[1].value).toPrecision(3));
-
-        rightSlopeLabels.append("text")
-            .attr("x", d => d.xRightPosition)
-            .attr("y", d => d.yRightPosition)
-            .attr("dx", config.labelKeyOffset)
-            .attr("dy", 3)
-
-            .attr("text-anchor", "start")
-            .text(d => d.key); */
-
-
-    /*     //relax(leftSlopeLabels, "yLeftPosition");
-        leftSlopeLabels.selectAll("text")
-        .attr("y", d => d.yLeftPosition);
-
-        //relax(rightSlopeLabels, "yRightPosition");
-        rightSlopeLabels.selectAll("text")
-        .attr("y", d => d.yRightPosition); */
 }
 
 /**
