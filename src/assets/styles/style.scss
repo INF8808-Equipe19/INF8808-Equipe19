@@ -156,3 +156,28 @@ main {
     font-size: $small-screen-base-font-size;
   }
 }
+
+
+
+// Slope chart
+
+.slope-label-left, .slope-label-right {
+  font-size: 16px;
+  cursor: default;
+  font-weight: 400;
+}
+
+.label-figure {
+  font-weight: 700;
+}
+
+.border-lines {
+  stroke: #999;
+  stroke-width: 1px;
+}
+
+slopeChartCircle {
+  fill: white;
+  stroke: black;
+  stroke-width: 2px;
+}

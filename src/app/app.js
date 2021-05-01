@@ -20,6 +20,8 @@ import { initialize as v9 } from './viz_9';
 //import { initialize as v10 } from './viz_10';
 import { initialize as v11 } from './viz_11';
 
+import { initialize as vizUnemployment} from './viz_unemployment.js';
+
 // Fallback for old browsers to support sticky positioning.
 let elements = [];
 ['.viz'].forEach(selector => {
@@ -28,7 +30,7 @@ let elements = [];
 stickyBits(elements, { stickyBitStickyOffset: 0 });
 
 // Initializes the scroller and the visualizations.
-Promise.all([v1(),v2(),v7(),v8(),v9(),v11()]).then(([callbacksV1,callbacksV2,callbacksV7,callbacksV8,callbacksV9,callbacksV11]) => {
-  scroller([callbacksV1,callbacksV2,callbacksV7,callbacksV8,callbacksV9,callbacksV11])
+Promise.all([v1(), v2(), vizUnemployment(), v7(), v8(), v9(), v11()]).then(([callbacksV1,callbacksV2, callbacksUnemployment, callbacksV7,callbacksV8,callbacksV9,callbacksV11]) => {
+  scroller([callbacksV1, callbacksV2, callbacksUnemployment, callbacksV7, callbacksV8, callbacksV9, callbacksV11])
     .initialize();
 });
