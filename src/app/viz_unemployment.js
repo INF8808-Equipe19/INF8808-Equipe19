@@ -92,7 +92,6 @@ function addSlopeChart(canvas, data, config, titleText) {
     config.yScale.domain([y1Min, y1Max]);
 
     drawYAxis(config.yScale, config)
-    drawXAxis(config.xScale, config)
 
     appendGraphLabels(unemploymentRates, config)
 
