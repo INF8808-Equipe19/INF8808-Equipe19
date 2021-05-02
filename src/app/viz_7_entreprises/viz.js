@@ -13,11 +13,11 @@ const config = {
     height: 500,
     margin: {
         bottom: 100,
-        left: 335,
+        left: 365,
         right: 100,
         top: 100
     },
-    width: 265
+    width: 235
 }
 const fullWidth = config.margin.left + config.width + config.margin.right;
 const fullHeight = config.margin.top + config.height + config.margin.bottom;

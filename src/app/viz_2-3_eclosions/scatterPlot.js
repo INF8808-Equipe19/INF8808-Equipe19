@@ -98,16 +98,18 @@ export function appendGraphLabels(svg, size) {
     svg.append('text')
         .text('Exposition aux maladies et aux infections')
         .attr('class', 'y axis-text')
-        .attr('font-size', 12)
+        .attr('font-size', 15)
         .attr('transform', 'translate(' + (-40) + ' ' + (size.height / 2) + '),rotate(-90)')
         .attr('text-anchor', 'middle')
+        .attr('font-weight','bold')
 
     svg.append('text')
         .text('Proximité physique')
         .attr('class', 'x axis-text')
-        .attr('font-size', 12)
+        .attr('font-size', 15)
         .attr('transform', 'translate(' + (size.width / 2) + ' ' + (size.height + 40) + ')')
         .attr('text-anchor', 'middle')
+        .attr('font-weight','bold')
 
 }
 
