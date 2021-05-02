@@ -310,7 +310,7 @@ function drawBars(y, xSubgroup, data, config, barWidth, xScale, groupName) {
 function appendGraphLabels (g,config) {
   g.append('text')
     .text('Nombre de cas')
-    .attr('class', 'y axis1-text tick')
+    .attr('class', 'y axis1-text axis-label')
     .attr('transform', 'translate(-60,'+ config.height/2 +'),rotate(-90)')
     .attr('font-size', 15)
     .attr('text-anchor','middle')
@@ -325,7 +325,7 @@ function appendGraphLabels (g,config) {
  function appendGraphLabels2 (g,config) {
   g.append('text')
     .text('Nombre de décès')
-    .attr('class', 'y axis1-text tick')
+    .attr('class', 'y axis1-text axis-label')
     .attr('transform', 'translate(-60,'+ config.height/2 +'),rotate(-90)')
     .attr('font-size', 15)
     .attr('text-anchor','middle')

@@ -43,6 +43,7 @@ export async function initialize() {
 
 function addCompteur (canvas, data, config) {
 d3.select('.compteur').remove();
+d3.select('.féminicides').remove();
 
 var compteur = canvas.append("text")
 .attr('class','compteur')
@@ -51,6 +52,15 @@ var compteur = canvas.append("text")
 .attr('y',config.height/2)
 .attr('font-weigth','bold')
 .attr('font-size','80');
+
+canvas.append('text')
+.attr('class','féminicides')
+.text('féminicides')
+.attr('text-anchor','middle')
+.attr('x',config.width/2)
+.attr('y',config.height/2+50)
+//.attr('font-weigth','bold')
+.attr('font-size','40');
   
 compteur.transition()
   .tween("text", function() {
@@ -62,6 +72,6 @@ compteur.transition()
      return function(t) { selection.text(Math.round(interpolator(t))); };  // return value
      
   })
-  .duration(8000);
+  .duration(4000);
 
 }

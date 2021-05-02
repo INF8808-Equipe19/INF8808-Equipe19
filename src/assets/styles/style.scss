@@ -44,12 +44,12 @@ p {
     }
 
     h1 {
-      font-size: $step-heading-font-size * 1.25;
+      font-size: $step-heading-font-size * 1.5;
       line-height: 1.3em;
     }
 
     h2 {
-      font-size: $step-heading-font-size;
+      font-size: $step-heading-font-size*1.5;
     }
   }
 }
@@ -60,7 +60,7 @@ main {
 }
 
 .background {
-  background-color: black;
+  background-color:#999999;
 }
 
 .text-section {
@@ -71,7 +71,7 @@ main {
 
   &.intro h1 {
     font-size: 4em;
-    color : white;
+    color: white
   }
 
   h2 {
@@ -191,4 +191,15 @@ slopeChartCircle {
   fill: white;
   stroke: black;
   stroke-width: 2px;
+}
+
+.axis-label {
+  font-size: 20px;
+  cursor: default;
+  font-weight: 400;
+}
+.tick {
+  font-size: 12px;
+  cursor: default;
+  font-weight: 400;
 }
