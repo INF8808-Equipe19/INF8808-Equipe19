@@ -126,39 +126,27 @@ function addSlopeChart(canvas, data, titleText, smallMultipleID) {
         })
         .entries(data);
 
-/*     var borderLines = maisonRates.append("g")
-        .attr("class", "border-lines");
-    borderLines.append("line")
-        .attr("x1", 0 + dx).attr("y1", 0)
-        .attr("x2", 0 + dx).attr("y2", config.height);
-    borderLines.append("line")
-        .attr("x1", config.width + dx).attr("y1", 0)
-        .attr("x2", config.width + dx).attr("y2", config.height);
- */
-
     addSlope(maisonRates, nestedByName[0], dx,
         '#00b4cf');
 
     addSlope(maisonRates, nestedByName[1], dx,
         '#fec636');
 
-
-
     var xAxis = maisonRates.append("g")
         .attr("class", "xAxis");
 
     xAxis.append("text")
         .attr("text-anchor", "end")
-        .attr("dx", 25 + dx)
-        .attr("dy", config.height + 30)
+        .attr("dx", 10 + dx)
+        .attr("dy", config.height + 25)
         .attr('font-size', 9)
         .text(config.leftTitle);
 
     xAxis.append("text")
         .attr('class', 'x axis-text')
         .attr("x", config.width + dx)
-        .attr("dx", -20)
-        .attr("dy", config.height + 30)
+        .attr("dx", -10)
+        .attr("dy", config.height + 25)
         .attr('font-size', 9)
         .text(config.rightTitle);
     
@@ -167,7 +155,8 @@ function addSlopeChart(canvas, data, titleText, smallMultipleID) {
         .attr("text-anchor", "middle")
         .attr("dx", 50 + dx)
         .attr("dy", -15)
-        .attr('font-size', 10)
+        .attr('font-size', 11)
+        .attr('font-weight', 'bold')
         .text(titleText);
     
 }
