@@ -242,15 +242,16 @@ function addLegend(g) {
       .append('rect')
       .attr('height', config.slopeWidth)
       .attr('width','15')
-      .attr('transform', (d,i) => 'translate(0,' + (8 + (22 * i)) + ')')
+      .attr('transform', (d,i) => 'translate(0,' + (15 + (20 * i)) + ')')
       .attr('fill', d => d);
   
     legend.selectAll('.cell')
       .append('text')
       .text((d,i) => labels[i])
-      .attr('transform', (d,i) => 'translate(20,' + (10+22 * i) +')')
+      .attr('transform', (d,i) => 'translate(20,' + (17 + 20 * i) +')')
       .attr('dominant-baseline','middle')
-      .attr('font-size',11);
+      .attr('opacity', 0.7)
+      .attr('font-size', 10);
   
   
   }

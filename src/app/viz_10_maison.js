@@ -22,8 +22,8 @@ var config = {
         alpha: 0.5,
         spacing: 18
     },
-    leftTitle: "Jan 2020",
-    rightTitle: "Jan 2021",
+    leftTitle: "2017",
+    rightTitle: "2020",
     labelGroupOffset: 5,
     labelKeyOffset: 50,
     radius: 2,
@@ -287,5 +287,6 @@ function addLegend(g) {
       .text((d,i) => labels[i])
       .attr('transform', (d,i) => 'translate(58,' + (10+11 * i) +')')
       .attr('dominant-baseline','middle')
+      .attr('opacity', 0.7)
       .attr('font-size', 7.5);
   }
