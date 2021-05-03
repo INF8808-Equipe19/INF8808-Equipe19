@@ -5,7 +5,6 @@
  */
 
 import * as d3 from 'd3';
-import { max } from 'd3';
 
 const config = {
   height: 500,
@@ -44,7 +43,7 @@ export async function initialize() {
 function addCompteur (canvas, data, config) {
 d3.select('.compteur').remove();
 d3.select('.féminicides').remove();
-
+// Ajout du compteur
 var compteur = canvas.append("text")
 .attr('class','compteur')
 .attr('text-anchor','middle')
@@ -61,7 +60,7 @@ canvas.append('text')
 .attr('y',config.height/2+50)
 //.attr('font-weigth','bold')
 .attr('font-size','40');
-  
+// Transition des chiffres du compteur  
 compteur.transition()
   .tween("text", function() {
      var selection = d3.select(this);    // selection of node being transitioned

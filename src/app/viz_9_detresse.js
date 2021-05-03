@@ -5,7 +5,6 @@
  */
 
 import * as d3 from 'd3';
-import { max } from 'd3';
 
 const config = {
   height: 500,
@@ -33,6 +32,7 @@ const g = svg.append('g')
  * @returns {Promise<*>}  A promise that contains a list of callbacks.
  */
 export async function initialize() {
+  // Entrée des données (comme elles sont simples)
   const data = [{sexe: 'Femmes', valeur: 11.4},{sexe: 'Diverses identités de genre', valeur: 11.2},{sexe: 'Hommes', valeur: 9.3}];
 
   // Échelles et axes
@@ -48,6 +48,7 @@ export async function initialize() {
 }
 
 function addBarChart1 (canvas, data, config, xScale, yScale) {
+  // On enlève et on remet le groupe du barChart pour ne pas les dédoubler
   canvas.select('.barChart9').remove()
   canvas.append('g').attr('class','barChart9');
   const barChart = canvas.selectAll('.barChart9')
@@ -55,9 +56,11 @@ function addBarChart1 (canvas, data, config, xScale, yScale) {
   barChart.append('g').attr('class','y axis9')
   barChart.append('g').attr('class','x axis9')
 
+// On ajoute les axes
   drawYAxis(yScale, canvas)
   drawXAxis(xScale,config, canvas)
 
+// On ajoute les labels
   appendGraphLabels(barChart,config)
 }
 
@@ -155,6 +158,7 @@ function appendRects (canvas, data, config, xScale, yScale) {
   const bars = canvas.selectAll('.bars9');
   const barWidth = config.width/15;
 
+  // Ajouts des barres du graphique
   bars.selectAll('rect')
   .data(data)
   .enter()

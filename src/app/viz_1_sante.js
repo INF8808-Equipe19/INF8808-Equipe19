@@ -5,7 +5,6 @@
  */
 
 import * as d3 from 'd3';
-import { max } from 'd3';
 
 const config = {
   height: 500,
@@ -64,9 +63,11 @@ function addBarChart (canvas, data, config, xScale, yScale) {
   barChart.append('g').attr('class','y axis1')
   barChart.append('g').attr('class','x axis1')
 
+  // Ajout des axes
   drawYAxis(yScale)
   drawXAxis(xScale,config)
 
+  // Ajout des barres principales
   appendRects(canvas, data, config, xScale, yScale)
   d3.selectAll('.axis1-text').remove()
   appendGraphLabels(canvas,config)
@@ -96,6 +97,7 @@ function appendRects (canvas, data, config, xScale, yScale) {
 }
 
 function updateRects (canvas, data, config, xScale, yScale,xSubgroupScale) {
+  // Retrait des barres précédentes
   canvas.select('.barChart').remove()
   
   canvas.append('g').attr('class','barChart');
@@ -103,7 +105,7 @@ function updateRects (canvas, data, config, xScale, yScale,xSubgroupScale) {
 
   barChart.append('g').attr('class','y axis1')
   barChart.append('g').attr('class','x axis1')
-
+  // Disparition des anciennes barres
   canvas.selectAll('.firstBars').transition().duration(300)
   .style('opacity','0');
   d3.selectAll('.thirdBars').selectAll('rect').transition().duration(300).style('opacity',0);
@@ -118,12 +120,13 @@ function updateRects (canvas, data, config, xScale, yScale,xSubgroupScale) {
     formattedData.push({Category: d.Category, Sex: 'Hommes', Value: parseInt(d.Hommes)})
   })
 
+  // Mise à jour des échelles
   updateYScale (yScale, formattedData)
   updateXScale (xScale, data)
   updateXSubgroupScale (xSubgroupScale, ['Hommes','Femmes'], xScale)
 
   drawBars(yScale, xSubgroupScale, formattedData, config, barWidth, xScale, groupName) 
-  
+  // Ajout des nouvelles barres
   d3.selectAll('.secondBars').selectAll('rect').transition().duration(300).style('opacity',1)
   d3.selectAll('.axis1-text').remove()
   appendGraphLabels(canvas,config)
@@ -140,6 +143,7 @@ function updateRects (canvas, data, config, xScale, yScale,xSubgroupScale) {
 }
 
 function updateRects2 (canvas, data, config, xScale, yScale,xSubgroupScale) {
+  // Retrait des ancienens barres
   canvas.select('.barChart').remove()
   canvas.append('g').attr('class','barChart');
   const barChart = canvas.selectAll('.barChart')
@@ -159,10 +163,12 @@ function updateRects2 (canvas, data, config, xScale, yScale,xSubgroupScale) {
     formattedData.push({Category: d.Category, Sex: 'Femmes', Value: parseInt(d.Femmes)})
     formattedData.push({Category: d.Category, Sex: 'Hommes', Value: parseInt(d.Hommes)})
   })
+  // Mise à jour des échelles
   updateYScale (yScale, formattedData)
   updateXScale (xScale, data)
   updateXSubgroupScale (xSubgroupScale, ['Hommes','Femmes'], xScale)
 
+  // Ajout des barres
   drawBars(yScale, xSubgroupScale, formattedData, config, barWidth, xScale, groupName) 
   
   d3.selectAll('.thirdBars').selectAll('rect').transition().duration(300).style('opacity',1)
