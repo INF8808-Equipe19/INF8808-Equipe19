@@ -53,9 +53,9 @@ function configInit() {
  * @returns {Promise<*>}  A promise that contains a list of callbacks.
  */
 export async function initialize() {
-    var QCdata = await d3.json("./data/unemployment_QC.json");
-    var CAdata = await d3.json("./data/unemployment_CA.json");
-    var USAdata = await d3.json("./data/unemployment_USA.json");
+    var CAdata = await d3.json("./data/emploi/unemployment_CA.json");
+    var QCdata = await d3.json("./data/emploi/unemployment_QC.json");
+    var USAdata = await d3.json("./data/emploi/unemployment_USA.json");
 
     var g = configInit();
 

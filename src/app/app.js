@@ -20,7 +20,8 @@ import { initialize as v9 } from './viz_9_detresse';
 //import { initialize as v10 } from './viz_10';
 import { initialize as v11 } from './viz_11_feminicides';
 
-import { initialize as vizUnemployment} from './viz_6_emplois.js';
+import { initialize as vizEmplois} from './viz_6_emplois.js';
+import { initialize as vizMaison} from './viz_10_maison.js';
 
 // Fallback for old browsers to support sticky positioning.
 let elements = [];
@@ -30,7 +31,7 @@ let elements = [];
 stickyBits(elements, { stickyBitStickyOffset: 0 });
 
 // Initializes the scroller and the visualizations.
-Promise.all([v1(), v2(), vizUnemployment(), v7(), v8(), v9(), v11()]).then(([callbacksV1,callbacksV2, callbacksUnemployment, callbacksV7,callbacksV8,callbacksV9,callbacksV11]) => {
-  scroller([callbacksV1, callbacksV2, callbacksUnemployment, callbacksV7, callbacksV8, callbacksV9, callbacksV11])
+Promise.all([v1(), v2(), vizEmplois(), v7(), v8(), v9(), vizMaison(), v11()]).then(([callbacksV1,callbacksV2, callbacksUnemployment, callbacksV7,callbacksV8,callbacksV9, callbacksMaison, callbacksV11]) => {
+  scroller([callbacksV1, callbacksV2, callbacksUnemployment, callbacksV7, callbacksV8, callbacksV9, callbacksMaison, callbacksV11])
     .initialize();
 });
