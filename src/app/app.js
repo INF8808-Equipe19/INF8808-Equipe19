@@ -20,7 +20,7 @@ import { initialize as v9 } from './viz_9_detresse';
 //import { initialize as v10 } from './viz_10';
 import { initialize as v11 } from './viz_11_feminicides';
 
-import { initialize as vizUnemployment} from './viz_unemployment.js';
+import { initialize as vizUnemployment} from './viz_6_emplois.js';
 
 // Fallback for old browsers to support sticky positioning.
 let elements = [];
