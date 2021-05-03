@@ -56,7 +56,7 @@ var x = d3.scaleBand()
 // Add Y axis
 var y = d3.scaleLinear()
   .domain([0, 100])
-  .range([ config.height, 0 ]);
+  .range([ config.height, 80 ]);
 
 
 // color palette = one color per subgroup
@@ -108,7 +108,7 @@ var stackedData = d3.stack()
        .attr("y", function(d) { return y(d[1]); });
 
        addLegend(svg);
-            svg.select('.legend').attr('transform','translate('+config.width+',0)');
+            svg.select('.legend').attr('transform','translate('+20+',0)');
 
             appendGraphLabels(svg,config)
             // Ajout de la zone modérée
@@ -157,7 +157,7 @@ var stackedData = d3.stack()
             .attr("y", function(d) { return y(d[1]); });
 
             addLegend(svg);
-            svg.select('.legend').attr('transform','translate('+config.width+',0)');
+            svg.select('.legend').attr('transform','translate('+20+',0)');
             appendGraphLabels(svg,config)
             // Ajout de la zone modérée
    
@@ -219,7 +219,7 @@ var stackedData = d3.stack()
             .attr("y", function(d) { return y(d[1]); });
 
             addLegend(svg);
-            svg.select('.legend').attr('transform','translate('+config.width+',0)');
+            svg.select('.legend').attr('transform','translate('+20+',0)');
 
             appendGraphLabels(svg,config)
             // Ajout de la zone modérée
@@ -264,7 +264,7 @@ var stackedData = d3.stack()
     g.append('text')
       .text("%")
       .attr('class', 'y axis9-text axis-label')
-      .attr('transform', 'translate(-40,'+5+')')
+      .attr('transform', 'translate(-50,85)')
       .attr('font-size', 15)
       .style('font-weigth','bold')
       .attr('text-anchor','middle')
