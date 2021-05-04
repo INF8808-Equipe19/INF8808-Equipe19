@@ -1,12 +1,12 @@
 /**
  * @file Unemployment slope charts for Le Devoir x INF8808-19 project
  * @author Mathieu Bélanger
- * @version v1.0.0
+ * @version v2.0.0Final
  */
 
 import * as d3 from 'd3';
 
-var config = {
+const config = {
     xOffset: 0,
     yOffset: 0,
     height: 250,
@@ -30,6 +30,10 @@ var config = {
     Title: "Taux de chômage au"
 }
 
+/**
+ * Initializes configuration values for the viz
+ * @returns {d3.Selection} HTML object that will contain the viz
+ */
 function configInit() {
     config.xScale = d3.scaleLinear().range([0, config.width]);
     config.yScale = d3.scaleLinear().range([config.height, 0]);
@@ -69,9 +73,12 @@ export async function initialize() {
     ]
 }
 
-/*
+/**
+ * Adds one whole slope chart to the viewbox
  * 
- *
+ * @param {d3.Selection} canvas The svg element where to insert the chart
+ * @param {*} data Json like object where the slope data for the 2 slopes are found
+ * @param {string} titleText The title of the chart shown on top of it
  */
 function addSlopeChart(canvas, data, titleText) {
 
@@ -101,10 +108,10 @@ function addSlopeChart(canvas, data, titleText) {
         .entries(data);
 
     addSlope(unemploymentRates, nestedByName[0],
-        '#fec636');
+        '#00b4cf');
 
     addSlope(unemploymentRates, nestedByName[1],
-        '#00b4cf');
+        '#fec636');
 
     var xAxis = canvas.append("g")
         .attr("class", "xAxis");
@@ -138,10 +145,13 @@ function addSlopeChart(canvas, data, titleText) {
     unemploymentRates.select('.legend').attr('transform','translate(10,0)');
 }
 
-/*
- * 
- *
- */
+/**
+* Draws a slope for a slope chart
+    * @param {*} canvas 
+    * @param {*} data 
+    * @param {number} dx The xAxis shift depending on the small multiple graph location
+    * @param {*} color The color to paint the line and end-cirles of the slope
+    */
 function addSlope(canvas, data, color) {
 
     var sexSlope = canvas.append("g")
@@ -212,7 +222,7 @@ function addSlope(canvas, data, color) {
 }
 
 /**
- * Appends the legend for the the y axis and the title of the graph.
+ * Appends the legend for the the y axis.
  *
  * @param {*} g The d3 Selection of the graph's g SVG element
  */
@@ -226,6 +236,11 @@ function appendGraphLabels(g) {
         .text("Taux de chômage (%)")
 }
 
+/**
+ * Appends the legend for the two differents slopes of the graph.
+ *
+ * @param {*} g The d3 Selection of the graph's g SVG element
+ */
 function addLegend(g) {
 
     g.append('g').attr('class','legend');
@@ -252,6 +267,4 @@ function addLegend(g) {
       .attr('dominant-baseline','middle')
       .attr('opacity', 0.7)
       .attr('font-size', 10);
-  
-  
   }

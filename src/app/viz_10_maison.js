@@ -1,12 +1,12 @@
 /**
- * @file maison slope charts for Le Devoir x INF8808-19 project
+ * @file Household chores slope charts (Smallmultiples) for Le Devoir x INF8808-19 project
  * @author Mathieu Bélanger
  * @version v1.0.0
  */
 
 import * as d3 from 'd3';
 
-var config = {
+const config = {
     xOffset: 0,
     yOffset: 0,
     height: 300,
@@ -30,6 +30,11 @@ var config = {
     slopeWidth: '1.5px',
 }
 
+/**
+ * Initializes the visualization
+ *
+ * @returns {Promise<*>}  A promise that contains a list of callbacks.
+ */
 function configInit() {
 
     const fullWidth = config.margin.left + config.width + config.margin.right;
@@ -77,8 +82,12 @@ export async function initialize() {
     ]
 }
 
+/**
+ * Adds a series of 3 side-by-side slope charts to the viewbox
+ * @param {d3.Selection} canvas The HTML point where to insert the viz
+ * @param {*} data Json-like object that contains the data for the three slope charts
+ */
 function addSlopeCharts(canvas, data) {
-
     canvas.selectAll("g").remove();
     var id = 0;
 
@@ -86,14 +95,16 @@ function addSlopeCharts(canvas, data) {
         addSlopeChart(canvas, subData, title, id++)
     })
 
-
     addLegend(canvas);
     canvas.select('.legend').attr('transform','translate(10,0)');
 }
 
-/*
- * 
- *
+/**
+ * Adds one slope chart to the viewbox
+ * @param {d3.Selection} canvas The HTML point where to insert the viz
+ * @param {*} data Array of data points (4) for the slope chart
+ * @param {*} titleText The title of the chart, to be shown on top of it
+ * @param {*} smallMultipleID Indicates the position of the chart from left to right. Ranges from 0 to 2
  */
 function addSlopeChart(canvas, data, titleText, smallMultipleID) {
 
@@ -161,10 +172,14 @@ function addSlopeChart(canvas, data, titleText, smallMultipleID) {
     
 }
 
+
 /**
- * Draws a slope for a slope chart
- * @param {number} dx The xAxis shift depending on the small multiple graph location
- */
+* Draws a slope for a slope chart
+    * @param {*} canvas 
+    * @param {*} data 
+    * @param {number} dx The xAxis shift depending on the small multiple graph location
+    * @param {*} color 
+    */
 function addSlope(canvas, data, dx, color) {
 
     var sexSlope = canvas.append("g")
@@ -211,6 +226,7 @@ function addSlope(canvas, data, dx, color) {
 
 /**
  * Draws the Y axis to the left of the diagram.
+ * @param
  * @param {number} dx The xAxis shift depending on the small multiple graph location
  */
 function drawYAxis(axisSelector, dx) {
